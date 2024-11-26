@@ -10,7 +10,7 @@ from Adventurer import Adventurer
 class TestRoom(unittest.TestCase):
 
     def setUp(self):
-        self.room = Room("Treasure Room", "A room filled with gold and jewels.")
+        self.room = Room()
 
     def test_initialization(self):
         self.assertEqual(self.room.name, "Treasure Room")

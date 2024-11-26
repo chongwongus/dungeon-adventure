@@ -8,6 +8,53 @@ class Adventurer:
         self.visionPot = 0
         self.pillarsFound = []
         self.currLocation = None
+        
+    @property
+    def hp(self):
+        return self._hp
+    
+    @hp.getter
+    def hp(self):
+        return self._hp
+    
+    @hp.setter
+    def hp(self, value):
+        if value < 0:
+            self._hp = 0
+        elif value > 100:
+            self._hp = 100
+        else:
+            self._hp = value
+    
+    @property
+    def healingPot(self):
+        return self._healingPot
+    
+    @healingPot.getter
+    def healingPot(self):
+        return self._healingPot
+    
+    @healingPot.setter
+    def healingPot(self, value):
+        if value < 0:
+            self._healingPot = 0
+        else:
+            self._healingPot = value
+    
+    @property
+    def visionPot(self):
+        return self._visionPot
+
+    @visionPot.getter
+    def visionPot(self):
+        return self._visionPot
+    
+    @visionPot.setter
+    def visionPot(self, value):
+        if value < 0:
+            self._visionPot = 0
+        else:
+            self._visionPot = value
 
     def __str__(self):
         """

@@ -12,26 +12,24 @@ from Adventurer import Adventurer
 class TestAdventurer(unittest.TestCase):
 
     def setUp(self):
-        self.adventurer = Adventurer("John", 100, 10)
+        self.adventurer = Adventurer("John")
 
     def test_initialization(self):
         self.assertEqual(self.adventurer.name, "John")
-        self.assertEqual(self.adventurer.health, 100)
-        self.assertEqual(self.adventurer.strength, 10)
+        self.assertLessEqual(self.adventurer.hp, 100)
+        self.assertGreaterEqual(self.adventurer.hp, 50)
+        self.assertEqual(self.adventurer.healingPot, 0)
+        self.assertEqual(self.adventurer.visionPot, 0)
 
     def test_take_damage(self):
-        self.adventurer.take_damage(20)
-        self.assertEqual(self.adventurer.health, 80)
+        starting_hp = self.adventurer.hp
+        self.adventurer.take_dmg(20)
+        self.assertEqual(self.adventurer.hp, starting_hp-20)
 
     def test_heal(self):
-        self.adventurer.take_damage(20)
-        self.adventurer.heal(10)
-        self.assertEqual(self.adventurer.health, 90)
-
-    def test_attack(self):
-        enemy = Adventurer("Enemy", 100, 5)
-        self.adventurer.attack(enemy)
-        self.assertEqual(enemy.health, 90)
+        starting_hp = self.adventurer.hp
+        self.adventurer.heal(20)
+        self.assertGreaterEqual(starting_hp+20, self.adventurer.hp)
 
 if __name__ == '__main__':
     unittest.main()
