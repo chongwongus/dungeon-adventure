@@ -27,25 +27,59 @@ class DungeonGUI:
         ttk.Label(start_frame, text="Dungeon Adventure",
                   font=('Arial', 24, 'bold')).pack(pady=20)
 
+        # Name entry
         ttk.Label(start_frame, text="Enter your name:").pack(pady=10)
         self.name_entry = ttk.Entry(start_frame)
         self.name_entry.pack(pady=10)
 
-        ttk.Button(start_frame, text="Start Game",
-                   command=self.start_game).pack(pady=20)
+        # Maze size entry
+        size_frame = ttk.Frame(start_frame)
+        size_frame.pack(pady=10)
 
-    def start_game(self):
+        ttk.Label(size_frame, text="Maze Size:").pack()
+        self.size_entry = ttk.Entry(size_frame, width=10)
+        self.size_entry.insert(0, "8")  # Default value
+        self.size_entry.pack(pady=5)
+
+        ttk.Button(start_frame, text="Start Game",
+                   command=self.validate_and_start).pack(pady=20)
+
+        difficulty_frame = ttk.Frame(start_frame)
+        difficulty_frame.pack(pady=10)
+
+        ttk.Label(difficulty_frame, text="Difficulty:").pack()
+        self.difficulty_var = tk.StringVar(value="easy")
+        ttk.Radiobutton(difficulty_frame, text="Easy (Random Generation)",
+                        variable=self.difficulty_var,
+                        value="easy").pack()
+        ttk.Radiobutton(difficulty_frame, text="Hard (DFS Generation)",
+                        variable=self.difficulty_var,
+                        value="hard").pack()
+
+    def validate_and_start(self):
+        """Validates inputs before starting game"""
         name = self.name_entry.get()
         if not name:
             messagebox.showwarning("Warning", "Please enter a name!")
             return
 
-        # Initialize game
-        self.dungeon = Dungeon()
+        try:
+            size = int(self.size_entry.get())
+            if size > 51:
+                messagebox.showwarning("Warning", "Please enter a size below 50!")
+                return
+        except ValueError:
+            messagebox.showwarning("Warning", "Please enter a valid number!")
+            return
+
+        difficulty = self.difficulty_var.get()
+        self.dungeon = Dungeon(
+            size=(size, size),
+            difficulty=difficulty
+        )
         self.player = Adventurer(name)
         self.player.currLocation = self.dungeon.entrance
 
-        # Setup game screen
         self.setup_game_screen()
 
     def setup_game_screen(self):
@@ -80,6 +114,10 @@ class DungeonGUI:
                    command=self.use_health_potion).pack(pady=5)
         ttk.Button(control_frame, text="Use Vision Potion",
                    command=self.use_vision_potion).pack(pady=5)
+
+        # Add Restart button
+        ttk.Button(control_frame, text="Restart Game",
+                   command=self.show_start_screen).pack(pady=20)
 
         # Add event log
         log_frame = ttk.LabelFrame(control_frame, text="Event Log", padding="5")

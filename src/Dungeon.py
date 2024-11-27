@@ -2,15 +2,18 @@ import random
 from Room import Room
 
 class Dungeon:
-    def __init__(self, size=(8, 8)):
+    def __init__(self, size=(8, 8), difficulty="easy"):
         self.size = size
-        self.maze = [[]] #2D Array
+        self.maze = [[]]
         self.entrance = None
         self.exit = None
-        self.generate_maze()
+        if difficulty == "easy":
+            self.generate_maze_random()
+        else:
+            self.generate_maze_dfs()
         self.place_items()
 
-    def generate_maze(self):
+    def generate_maze_random(self):
         """Generates maze structure and ensures a path exists to exit and all pillars"""
         # Initialize the maze grid
         self.maze = []
@@ -31,6 +34,85 @@ class Dungeon:
 
         # Then place items, ensuring pillars are reachable
         self.place_items()
+
+
+
+    def generate_maze_dfs(self):
+        """
+        Generates maze structure using DFS algorithm to ensure a fully connected maze
+        """
+        # Initialize the maze grid
+        self.maze = []
+        for y in range(self.size[1]):
+            row = []
+            for x in range(self.size[0]):
+                row.append(Room())
+            self.maze.append(row)
+
+        # Set entrance and exit
+        self.entrance = (0, 0)
+        self.exit = (self.size[0] - 1, self.size[1] - 1)
+        self.maze[0][0].isEntrance = True
+        self.maze[self.size[1] - 1][self.size[0] - 1].isExit = True
+
+        # Use DFS to generate paths
+        visited = set()
+        stack = [self.entrance]
+
+        while stack:
+            current = stack[-1]  # Look at current cell
+            x, y = current
+            visited.add(current)
+
+            # Get all unvisited neighbors
+            neighbors = []
+            # Check all possible directions: N, S, E, W
+            possible_moves = [
+                ('N', (x, y - 1)),
+                ('S', (x, y + 1)),
+                ('E', (x + 1, y)),
+                ('W', (x - 1, y))
+            ]
+
+            for direction, (nx, ny) in possible_moves:
+                if (0 <= nx < self.size[0] and
+                        0 <= ny < self.size[1] and
+                        (nx, ny) not in visited):
+                    neighbors.append((direction, (nx, ny)))
+
+            if neighbors:
+                # Randomly choose a neighbor
+                direction, next_cell = random.choice(neighbors)
+                nx, ny = next_cell
+
+                # Create path between cells (add doors)
+                self.maze[y][x].doors[direction] = True
+                # Add opposite door to neighbor
+                opposite = {'N': 'S', 'S': 'N', 'E': 'W', 'W': 'E'}
+                self.maze[ny][nx].doors[opposite[direction]] = True
+
+                stack.append(next_cell)
+            else:
+                # No unvisited neighbors, backtrack
+                stack.pop()
+
+        # Add a few random connections to make it more interesting
+        self.add_random_connections()
+
+    def add_random_connections(self):
+        """Add some random connections to make maze more interesting"""
+        for y in range(self.size[1]):
+            for x in range(self.size[0]):
+                # Try to add random east and south connections
+                if x < self.size[0] - 1:
+                    if random.random() < 0.15:  # 15% chance for extra connections
+                        self.maze[y][x].doors['E'] = True
+                        self.maze[y][x + 1].doors['W'] = True
+
+                if y < self.size[1] - 1:
+                    if random.random() < 0.15:
+                        self.maze[y][x].doors['S'] = True
+                        self.maze[y + 1][x].doors['N'] = True
 
     def create_connected_maze(self):
         """Creates a maze where every room is reachable"""
@@ -147,14 +229,30 @@ class Dungeon:
         x, y = current_pos
         current_room = self.get_room(x, y)
 
+        # First check if there's a door in that direction
         if not current_room or not current_room.doors[direction]:
             return False
 
-        # Check if destination is within bounds
-        if direction == 'W' and y == 0: return False
-        if direction == 'S' and y == self.size[1] - 1: return False
-        if direction == 'D' and x == self.size[0] - 1: return False
-        if direction == 'A' and x == 0: return False
+        # Then check if the destination is within bounds
+        new_x, new_y = x, y
+        if direction == 'N':
+            new_y -= 1
+        elif direction == 'S':
+            new_y += 1
+        elif direction == 'E':
+            new_x += 1
+        elif direction == 'W':
+            new_x -= 1
+
+        # Check if new position is within bounds
+        if not (0 <= new_x < self.size[0] and 0 <= new_y < self.size[1]):
+            return False
+
+        # Check if destination room has corresponding door
+        dest_room = self.get_room(new_x, new_y)
+        opposite = {'N': 'S', 'S': 'N', 'E': 'W', 'W': 'E'}
+        if not dest_room.doors[opposite[direction]]:
+            return False
 
         return True
 
