@@ -22,23 +22,22 @@ class Room:
             'E': False,
             'W': False
         }
+        self.visited = False
 
 
     def __str__(self):
         """
-
         :return: ASCII representation of room
         """
-        top = '*' + ('-' if self.doors['N'] else '*') + '\n'
-        mid = (('|' if self.doors['W'] else '*') +
-               self.get_room_display() +
-               ('|' if self.doors['E'] else '*') + '\n')
-        bot = '*' + ('-' if self.doors['S'] else '*') + '*'
-        return top + mid + bot
+        top = ' * ' + ('-' if self.doors['N'] else ' * ') + ' * '
+        mid = (' | ' if self.doors['W'] else ' * ') + \
+              (self.get_room_display() + ' ' if self.visited else ' ? ') + \
+              (' | ' if self.doors['E'] else ' * ')
+        bot = ' * ' + (' - ' if self.doors['S'] else ' * ') + ' * '
+        return top + '\n' + mid + '\n' + bot
 
     def get_room_display(self):
         """
-
         :return: char representing room contents
         """
         if self.isEntrance:
