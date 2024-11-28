@@ -1,11 +1,15 @@
 import random
 
-class Adventurer:
+from items.Pillar import Pillar
+from items.VisionPotion import VisionPotion
+from items.HealthPotion import HealthPotion
+
+class Adventurer():
     def __init__(self, name):
         self.name = name
         self.hp = random.randint(75, 100)
-        self.healingPot = 0
-        self.visionPot = 0
+        self.healingPot = []
+        self.visionPot = []
         self.pillarsFound = []
         self.currLocation = None
         
@@ -33,36 +37,40 @@ class Adventurer:
     @healingPot.getter
     def healingPot(self):
         return self._healingPot
-    
+
     @healingPot.setter
     def healingPot(self, value):
-        if value < 0:
-            self._healingPot = 0
-        else:
-            self._healingPot = value
+        self._healingPot = value
     
     @property
     def visionPot(self):
         return self._visionPot
-
+    
     @visionPot.getter
     def visionPot(self):
         return self._visionPot
     
     @visionPot.setter
     def visionPot(self, value):
-        if value < 0:
-            self._visionPot = 0
-        else:
-            self._visionPot = value
+        self._visionPot = value
+    
+    def collect_item(self, item):
+        if isinstance(item, HealthPotion):
+            self.healingPot.append(item)
+        elif isinstance(item, VisionPotion):
+            self.visionPot.append(item)
+        elif isinstance(item, Pillar):
+            if item not in self.pillarsFound:
+                self.pillarsFound.append(pillar)
+                self.pillarsFound.append(item)
 
     def __str__(self):
         """
         string representation of adventurer's status
         :return:
         """
-        string = (f"Adventurer: {self.name}\nHP: {self.hp}\nHealth Potions: {self.healingPot}\n"
-                  f"Vision Potions: {self.visionPot}\n"
+        string = (f"Adventurer: {self.name}\nHP: {self.hp}\nHealth Potions: {len(self.healingPot)}\n"
+                  f"Vision Potions: {len(self.visionPot)}\n"
                   f"Pillars Found: {', '.join(self.pillarsFound) if self.pillarsFound else 'None'}")
         return string
 
@@ -87,10 +95,9 @@ class Adventurer:
         uses healing potion if available
         :return:
         """
-        if self.healingPot > 0:
-            healing = random.randint(1, 100)
-            self.hp += healing
-            self.healingPot -= 1
+        if len(self.healingPot) > 0:
+            potion: HealthPotion = self.healingPot.pop()
+            potion.use(self)
             return True
         return False
 
@@ -100,18 +107,10 @@ class Adventurer:
         :return:
         """
         if self.visionPot > 0:
-            self.visionPot -= 1
+            potion: VisionPotion = self.visionPot.pop()
+            potion.use(self)
             return True
         return False
-
-    def add_pillar(self, pillar):
-        """
-        adds pillar to collection if not already found
-        :param pillar:
-        :return:
-        """
-        if pillar not in self.pillarsFound:
-            self.pillarsFound.append(pillar)
 
     def take_dmg(self, amount):
         """
@@ -120,11 +119,3 @@ class Adventurer:
         :return:
         """
         self.hp -= amount
-
-    def heal(self, amount):
-        """
-        method for adventurer healing some amount
-        :param amount: healing amount
-        :return:
-        """
-        self.hp += amount
