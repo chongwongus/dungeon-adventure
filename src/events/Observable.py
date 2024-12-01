@@ -3,7 +3,8 @@
     Observable class that is an abstract class.
 </description>
 '''
-from events.DungeonEvent import DungeonEvent
+
+from events.Observer import Observer
 
 
 class Observable:
@@ -14,7 +15,7 @@ class Observable:
     <return> None </return>
     '''
     def __init__(self):
-        self.observers = []
+        self.observers: list[Observer] = []
     
     '''
     <description>
@@ -43,6 +44,6 @@ class Observable:
     <param name=message> Message to notify the observers. </param>
     <return> None </return>
     '''
-    def notify(self, event: DungeonEvent):
+    def notify(self, message):
         for observer in self.observers:
-            observer.update(event)
+            observer.update(message)

@@ -1,4 +1,5 @@
-from Item import Item
+from items.Item import Item
+
 
 class Pillar(Item):
     def __init__(self, x, y, name, description):

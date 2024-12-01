@@ -11,6 +11,6 @@ class VisionPotion(Potion, Observable):
         :param adventurer: the adventurer using the potion
         :return: None
         """
-        adventurer.visionPot += 1
-        self.notify(VISION_POTION_USED)
+        adventurer.visionPot -= 1
+        self.notify("on_player_takes_vision_potion", adventurer)
         
