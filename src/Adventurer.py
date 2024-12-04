@@ -88,7 +88,7 @@ class Adventurer:
         :return:
         """
         if self.healingPot > 0:
-            healing = random.randint(1, 100)
+            healing = random.randint(5, 15)
             self.hp += healing
             self.healingPot -= 1
             return True
