@@ -8,8 +8,8 @@ class Adventurer():
     def __init__(self, name):
         self.name = name
         self.hp = random.randint(75, 100)
-        self.healingPot = []
-        self.visionPot = []
+        self.healingPot = 0
+        self.visionPot = 0
         self.pillarsFound = []
         self.currLocation = None
         
@@ -69,8 +69,8 @@ class Adventurer():
         string representation of adventurer's status
         :return:
         """
-        string = (f"Adventurer: {self.name}\nHP: {self.hp}\nHealth Potions: {len(self.healingPot)}\n"
-                  f"Vision Potions: {len(self.visionPot)}\n"
+        string = (f"Adventurer: {self.name}\nHP: {self.hp}\nHealth Potions: {self.healingPot}\n"
+                  f"Vision Potions: {self.visionPot}\n"
                   f"Pillars Found: {', '.join(self.pillarsFound) if self.pillarsFound else 'None'}")
         return string
 
@@ -95,8 +95,9 @@ class Adventurer():
         uses healing potion if available
         :return:
         """
-        if len(self.healingPot) > 0:
-            potion: HealthPotion = self.healingPot.pop()
+        if self.healingPot > 0:
+            self.healingPot -= 1
+            potion: HealthPotion = self.healingPot
             potion.use(self)
             return True
         return False
@@ -107,7 +108,8 @@ class Adventurer():
         :return:
         """
         if self.visionPot > 0:
-            potion: VisionPotion = self.visionPot.pop()
+            self.visionPot -= 1
+            potion: VisionPotion = self.visionPot
             potion.use(self)
             return True
         return False
@@ -119,3 +121,12 @@ class Adventurer():
         :return:
         """
         self.hp -= amount
+    
+    def add_pillar(self, pillar):
+        """
+        adds a pillar to the adventurer's collection
+        :param pillar: pillar to add
+        :return:
+        """
+        if pillar not in self.pillarsFound:
+            self.pillarsFound.append(pillar)
