@@ -7,6 +7,7 @@ from dungeon.DungeonFactory import DungeonFactory
 class DFSDungeonFactory(DungeonFactory):
     
     def create(self, size=(8, 8)):
+        '''Create a Dungeon object'''
         self.dungeon = Dungeon(size)
         self.generate_maze_dfs()
         return self.dungeon

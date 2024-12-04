@@ -19,6 +19,7 @@ class DungeonGUI:
         self.show_start_screen()
 
     def show_start_screen(self):
+        '''Show the start screen'''
         # Clear window
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -90,6 +91,7 @@ class DungeonGUI:
         self.setup_game_screen()
 
     def setup_game_screen(self):
+        '''Setup the main game screen'''
         # Clear window
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -156,6 +158,7 @@ class DungeonGUI:
         self.event_log.see("1.0")  # Scroll to top
 
     def update_display(self):
+        '''Update the game display'''
         self.canvas.delete('all')
 
         # Draw all rooms
@@ -167,6 +170,7 @@ class DungeonGUI:
         self.player_info.config(text=str(self.player))
 
     def draw_room(self, x, y, room):
+        '''Draw a single room on the canvas'''
         # Calculate pixel coordinates
         px = x * (self.cell_size + self.padding)
         py = y * (self.cell_size + self.padding)
@@ -232,6 +236,7 @@ class DungeonGUI:
                                     fill='blue')
 
     def try_move(self, direction):
+        '''Try to move player in given direction'''
         if self.dungeon.is_valid_move(self.player.currLocation, direction):
             self.player.move(direction)
             self.process_room()
@@ -239,6 +244,7 @@ class DungeonGUI:
             self.check_game_state()
 
     def process_room(self):
+        '''Process current room's contents'''
         x, y = self.player.currLocation
         current_room = self.dungeon.get_room(x, y)
         current_room.visited = True
@@ -264,6 +270,7 @@ class DungeonGUI:
             self.add_event_message(f"Found the Pillar of {current_room.pillarType}!")
 
     def use_health_potion(self):
+        '''Uses health potion to heal player'''
         if self.player.use_healing_pot():
             self.add_event_message(f"Used healing potion! HP is now {self.player.hp}")
             self.update_display()
@@ -271,6 +278,7 @@ class DungeonGUI:
             self.add_event_message("No healing potions available!")
 
     def use_vision_potion(self):
+        '''Uses vision potion to reveal surrounding rooms'''
         if self.player.use_vision_pot():
             x, y = self.player.currLocation
             for dy in [-1, 0, 1]:
@@ -284,6 +292,7 @@ class DungeonGUI:
             self.add_event_message("No vision potions available!")
 
     def check_game_state(self):
+        '''Check if game is over'''
         if self.player.hp <= 0:
             messagebox.showinfo("Game Over", "You have died!")
             self.show_start_screen()

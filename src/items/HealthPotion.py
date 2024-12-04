@@ -9,4 +9,5 @@ class HealthPotion(Potion):
         self.health_value = random.randint(5, 15)
     
     def use(self, adventurer: Adventurer):
+        '''Use the potion on the adventurer'''
         adventurer.hp += self.health_value

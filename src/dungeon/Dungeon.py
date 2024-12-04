@@ -35,6 +35,7 @@ class Dungeon:
         return False
 
     def get_room(self, x, y):
+        '''Returns the room at the given position'''
         if 0 <= x < self.size[0] and 0 <= y < self.size[1]:
             return self.maze[y][x]
         return None
