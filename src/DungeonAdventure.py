@@ -1,5 +1,5 @@
 import random
-from Dungeon import Dungeon
+from dungeon.Dungeon import Dungeon
 from Adventurer import Adventurer
 
 class DungeonAdventure:

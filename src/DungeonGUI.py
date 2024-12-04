@@ -1,8 +1,11 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 import random
-from Dungeon import Dungeon
+from dungeon.DFSDungeonFactory import DFSDungeonFactory
+from dungeon.EasyDungeonFactory import EasyDungeonFactory
+from dungeon.Dungeon import Dungeon
 from Adventurer import Adventurer
+from dungeon.DungeonFactory import DungeonFactory
 
 
 class DungeonGUI:
@@ -11,7 +14,7 @@ class DungeonGUI:
         self.root.title("Dungeon Adventure")
         self.root.geometry("800x600")
 
-        self.dungeon = None
+        self.dungeon: Dungeon = None
         self.player = None
         self.show_start_screen()
 
@@ -73,10 +76,14 @@ class DungeonGUI:
             return
 
         difficulty = self.difficulty_var.get()
-        self.dungeon = Dungeon(
-            size=(size, size),
-            difficulty=difficulty
-        )
+        
+        dungeonFactory:DungeonFactory = None
+        if difficulty == "easy":
+            dungeonFactory = EasyDungeonFactory() 
+        else:
+            dungeonFactory = DFSDungeonFactory()
+            
+        self.dungeon = dungeonFactory.create((size, size))
         self.player = Adventurer(name)
         self.player.currLocation = self.dungeon.entrance
 

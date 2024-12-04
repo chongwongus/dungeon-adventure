@@ -6,7 +6,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from DungeonAdventure import DungeonAdventure
 from Adventurer import Adventurer
-from Dungeon import Dungeon
+from Dungeon.Dungeon import Dungeon
 
 # test/test_DungeonAdventure.py
 
