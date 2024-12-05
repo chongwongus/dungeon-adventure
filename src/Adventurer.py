@@ -1,6 +1,10 @@
 import random
 
-class Adventurer:
+from items.Pillar import Pillar
+from items.VisionPotion import VisionPotion
+from items.HealthPotion import HealthPotion
+
+class Adventurer():
     def __init__(self, name):
         self.name = name
         self.hp = random.randint(75, 100)
@@ -33,28 +37,32 @@ class Adventurer:
     @healingPot.getter
     def healingPot(self):
         return self._healingPot
-    
+
     @healingPot.setter
     def healingPot(self, value):
-        if value < 0:
-            self._healingPot = 0
-        else:
-            self._healingPot = value
+        self._healingPot = value
     
     @property
     def visionPot(self):
         return self._visionPot
-
+    
     @visionPot.getter
     def visionPot(self):
         return self._visionPot
     
     @visionPot.setter
     def visionPot(self, value):
-        if value < 0:
-            self._visionPot = 0
-        else:
-            self._visionPot = value
+        self._visionPot = value
+    
+    def collect_item(self, item):
+        if isinstance(item, HealthPotion):
+            self.healingPot.append(item)
+        elif isinstance(item, VisionPotion):
+            self.visionPot.append(item)
+        elif isinstance(item, Pillar):
+            if item not in self.pillarsFound:
+                self.pillarsFound.append(pillar)
+                self.pillarsFound.append(item)
 
     def __str__(self):
         """
@@ -103,15 +111,6 @@ class Adventurer:
             return True
         return False
 
-    def add_pillar(self, pillar):
-        """
-        adds pillar to collection if not already found
-        :param pillar:
-        :return:
-        """
-        if pillar not in self.pillarsFound:
-            self.pillarsFound.append(pillar)
-
     def take_dmg(self, amount):
         """
         method for adventurer taking some amount of damage
@@ -119,11 +118,12 @@ class Adventurer:
         :return:
         """
         self.hp -= amount
-
-    def heal(self, amount):
+    
+    def add_pillar(self, pillar):
         """
-        method for adventurer healing some amount
-        :param amount: healing amount
+        adds a pillar to the adventurer's collection
+        :param pillar: pillar to add
         :return:
         """
-        self.hp += amount
+        if pillar not in self.pillarsFound:
+            self.pillarsFound.append(pillar)
