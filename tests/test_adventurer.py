@@ -20,8 +20,8 @@ class TestAdventurer(unittest.TestCase):
         self.assertEqual(self.adventurer.name, "John")
         self.assertLessEqual(self.adventurer.hp, 100)
         self.assertGreaterEqual(self.adventurer.hp, 50)
-        self.assertEqual(self.adventurer.healingPot, [])
-        self.assertEqual(self.adventurer.visionPot, [])
+        self.assertEqual(self.adventurer.healingPot, 0)
+        self.assertEqual(self.adventurer.visionPot, 0)
 
     def test_take_damage(self):
         starting_hp = self.adventurer.hp
@@ -30,12 +30,11 @@ class TestAdventurer(unittest.TestCase):
     
     def test_use_healing_pot(self):
         # Test when healing potions are available
-        self.adventurer.healingPot = [HealthPotion()]
+        self.adventurer.healingPot = 1
         result = self.adventurer.use_healing_pot()
-        self.assertTrue(result)
-        
+        self.assertTrue(result)        
         # Test when no healing potions are available
-        self.adventurer.healingPot = []
+        self.adventurer.healingPot = 0
         result = self.adventurer.use_healing_pot()
         self.assertFalse(result)
 

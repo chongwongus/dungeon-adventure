@@ -2,10 +2,9 @@ import unittest
 import sys
 import os
 
-# Add the src directory to the system path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from Dungeon.Room import Room
 from Adventurer import Adventurer
+from dungeon.Room import Room
 
 class TestRoom(unittest.TestCase):
 
@@ -13,23 +12,34 @@ class TestRoom(unittest.TestCase):
         self.room = Room()
 
     def test_initialization(self):
-        self.assertEqual(self.room.name, "Treasure Room")
-        self.assertEqual(self.room.description, "A room filled with gold and jewels.")
-        self.assertEqual(self.room.adventurers, [])
+        self.assertFalse(self.room.hasHealthPot)
+        self.assertFalse(self.room.hasPillar)
+        self.assertFalse(self.room.hasPit)
+        self.assertFalse(self.room.hasVisionPot)
 
-    def test_add_adventurer(self):
-        adventurer = Adventurer("John", 100, 10)
-        self.room.add_adventurer(adventurer)
-        self.assertIn(adventurer, self.room.adventurers)
-
-    def test_remove_adventurer(self):
-        adventurer = Adventurer("John", 100, 10)
-        self.room.add_adventurer(adventurer)
-        self.room.remove_adventurer(adventurer)
-        self.assertNotIn(adventurer, self.room.adventurers)
+    def test_add_doors(self):
+        self.assertTrue(not self.room.doors['N'])
+        self.assertTrue(not self.room.doors['S'])
+        self.assertTrue(not self.room.doors['E'])
+        self.assertTrue(not self.room.doors['W'])
+        self.room.doors= {
+            'N': True,
+            'S': True,
+            'E': True,
+            'W': True
+        }
+        self.assertTrue(self.room.doors['N'])
+        self.assertTrue(self.room.doors['S'])
+        self.assertTrue(self.room.doors['E'])
+        self.assertTrue(self.room.doors['W'])
 
     def test_room_description(self):
-        self.assertEqual(self.room.get_description(), "A room filled with gold and jewels.")
+        self.assertEqual(self.room.get_room_display(), " ")
+        self.room.hasHealthPot = True
+        self.assertEqual(self.room.get_room_display(), "H")
+        self.room.hasHealthPot = False
+        self.room.hasPit = True
+        self.assertEqual(self.room.get_room_display(), "X")
 
 if __name__ == '__main__':
     unittest.main()

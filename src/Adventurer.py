@@ -97,8 +97,7 @@ class Adventurer():
         """
         if self.healingPot > 0:
             self.healingPot -= 1
-            potion: HealthPotion = self.healingPot
-            potion.use(self)
+            self.hp += random.randint(5, 15)
             return True
         return False
 
@@ -109,8 +108,6 @@ class Adventurer():
         """
         if self.visionPot > 0:
             self.visionPot -= 1
-            potion: VisionPotion = self.visionPot
-            potion.use(self)
             return True
         return False
 
