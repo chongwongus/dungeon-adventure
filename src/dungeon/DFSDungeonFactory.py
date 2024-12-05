@@ -61,7 +61,7 @@ class DFSDungeonFactory(DungeonFactory):
                 nx, ny = next_cell
 
                 # Create path between cells (add doors)
-                self.maze[y][x].doors[direction] = True
+                self.dungeon.maze[y][x].doors[direction] = True
                 # Add opposite door to neighbor
                 opposite = {'N': 'S', 'S': 'N', 'E': 'W', 'W': 'E'}
                 self.dungeon.maze[ny][nx].doors[opposite[direction]] = True
@@ -85,7 +85,7 @@ class DFSDungeonFactory(DungeonFactory):
                         self.dungeon.maze[y][x].doors['E'] = True
                         self.dungeon.maze[y][x + 1].doors['W'] = True
 
-                if y < self.size[1] - 1:
+                if y < self.dungeon.size[1] - 1:
                     if random.random() < 0.15:
                         self.dungeon.maze[y][x].doors['S'] = True
                         self.dungeon.maze[y + 1][x].doors['N'] = True
