@@ -1,0 +1,65 @@
+classDiagram
+    class Room {
+        -hasPit: bool
+        -hasHealingPotion: bool
+        -hasVisionPotion: bool
+        -hasPillar: bool
+        -isEntrance: bool
+        -isExit: bool
+        -doors: dict
+        +__init__()
+        +__str__()
+        +add_doors()
+        +remove_item()
+        +get_room_type()
+        +get_room_display()
+    }
+
+    class Adventurer {
+        -name: str
+        -hitPoints: int
+        -healingPotions: int
+        -visionPotions: int
+        -pillarsFound: list
+        -currentLocation: tuple
+        +__init__(name)
+        +__str__()
+        +move(direction)
+        +use_healing_potion()
+        +use_vision_potion()
+        +add_pillar(pillar)
+        +take_damage(amount)
+        +heal(amount)
+    }
+
+    class Dungeon {
+        -maze: list
+        -size: tuple
+        -entrance: tuple
+        -exit: tuple
+        -pillarLocations: list
+        +__init__(size)
+        +__str__()
+        +generate_maze()
+        +place_items()
+        +is_traversable()
+        +get_room(x, y)
+        +get_valid_moves(location)
+    }
+
+    class DungeonAdventure {
+        -dungeon: Dungeon
+        -player: Adventurer
+        -gameOver: bool
+        +__init__()
+        +play_game()
+        -display_intro()
+        -handle_menu()
+        -process_room()
+        -display_ending()
+        -debug_display_dungeon()
+    }
+
+    DungeonAdventure --> Dungeon
+    DungeonAdventure --> Adventurer
+    Dungeon --> Room
